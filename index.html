@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Refer-A-Friend — Social Media Posting Schedule | TMGM Q2 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FAFBFC; --white: #FFFFFF; --dark: #111827; --grey-900: #1F2937;
+  --grey-700: #374151; --grey-600: #4B5563; --grey-500: #6B7280;
+  --grey-400: #9CA3AF; --grey-300: #D1D5DB; --grey-200: #E5E7EB;
+  --grey-100: #F3F4F6; --grey-50: #F9FAFB;
+  --blue: #3B82F6; --blue-light: #EFF6FF; --blue-dark: #1E40AF;
+  --purple: #8B5CF6; --purple-light: #F5F3FF;
+  --green: #10B981; --green-light: #ECFDF5;
+  --amber: #F59E0B; --amber-light: #FFFBEB;
+  --red: #EF4444; --red-light: #FEF2F2;
+  --brand: #CC1042; --brand-light: #FFF0F3;
+  --font: 'Inter', -apple-system, system-ui, sans-serif;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.04);
+  --shadow-lg: 0 10px 15px rgba(0,0,0,0.06), 0 4px 6px rgba(0,0,0,0.04);
+  --radius: 12px; --radius-lg: 16px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { font-family:var(--font); color:var(--dark); background:var(--bg); line-height:1.6; -webkit-font-smoothing:antialiased; }
+
+/* HEADER */
+.header { background:var(--white); border-bottom:1px solid var(--grey-200); padding:24px 40px; position:sticky; top:0; z-index:100; }
+.header-inner { max-width:1200px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; }
+.header-left h1 { font-size:18px; font-weight:800; color:var(--dark); letter-spacing:-0.3px; }
+.header-left p { font-size:12px; color:var(--grey-500); margin-top:2px; }
+.header-right { display:flex; gap:8px; }
+.header-badge { padding:4px 12px; border-radius:20px; font-size:11px; font-weight:600; }
+.badge-posts { background:var(--blue-light); color:var(--blue); }
+.badge-lang { background:var(--green-light); color:var(--green); }
+.badge-status { background:var(--amber-light); color:var(--amber); }
+
+/* MAIN */
+.main { max-width:1200px; margin:0 auto; padding:32px 40px 80px; }
+/* CAMPAIGN INFO */
+.campaign-info { margin-bottom:40px; padding:28px 32px; background:var(--white); border-radius:var(--radius-lg); border:1px solid var(--grey-200); box-shadow:var(--shadow-sm); }
+.campaign-info-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--grey-400); margin-bottom:16px; }
+.campaign-grid { display:grid; grid-template-columns:1fr 1fr; gap:0; }
+.campaign-row { display:flex; border-bottom:1px solid var(--grey-100); }
+.campaign-row:last-child { border-bottom:none; }
+.campaign-cell { flex:1; padding:14px 18px; display:flex; align-items:flex-start; gap:10px; }
+.campaign-cell + .campaign-cell { border-left:1px solid var(--grey-100); }
+.campaign-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--grey-400); min-width:110px; padding-top:2px; flex-shrink:0; }
+.campaign-value { font-size:13px; color:var(--dark); font-weight:500; line-height:1.5; word-break:break-all; }
+.campaign-value a { color:var(--blue); text-decoration:none; }
+.campaign-value a:hover { text-decoration:underline; }
+.campaign-value .pending { color:var(--amber); font-weight:600; }
+
+/* POST CARD */
+.post-card { background:var(--white); border-radius:var(--radius-lg); border:1px solid var(--grey-200); box-shadow:var(--shadow-sm); margin-bottom:24px; overflow:hidden; transition:box-shadow 0.2s; scroll-margin-top:80px; }
+.post-card:hover { box-shadow:var(--shadow-md); }
+
+.post-header { padding:20px 28px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid transparent; cursor:pointer; user-select:none; transition:border-color 0.2s; }
+.post-card.expanded .post-header { border-bottom-color:var(--grey-100); }
+.post-header-left { display:flex; align-items:center; gap:14px; }
+.post-num { width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; color:var(--white); flex-shrink:0; }
+.post-num.instagram { background:#E1306C; }
+.post-num.facebook { background:#1877F2; }
+.post-meta h2 { font-size:15px; font-weight:700; color:var(--dark); }
+.post-meta .trigger { font-size:12px; color:var(--grey-500); }
+.post-toggle { width:28px; height:28px; border-radius:6px; background:var(--grey-100); display:flex; align-items:center; justify-content:center; color:var(--grey-500); font-size:12px; transition:all 0.3s; flex-shrink:0; }
+.post-card.expanded .post-toggle { background:var(--brand); color:var(--white); }
+.post-card.expanded .post-toggle svg { transform:rotate(180deg); }
+.expand-hint { font-size:11px; color:var(--grey-400); margin-left:8px; font-weight:500; font-style:italic; transition:opacity 0.3s; }
+.post-card.expanded .expand-hint { opacity:0; pointer-events:none; }
+.post-collapsible { max-height:0; overflow:hidden; transition:max-height 0.4s ease; }
+.post-card.expanded .post-collapsible { max-height:5000px; }
+
+/* POST BODY */
+.post-body { padding:28px; }
+
+/* POST META STRIP */
+.post-strip { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:0; padding:14px 0; background:var(--grey-50); border-radius:10px; border:1px solid var(--grey-200); margin-bottom:28px; }
+.post-strip-cell { padding:0 18px; border-right:1px solid var(--grey-200); }
+.post-strip-cell:last-child { border-right:none; }
+.post-strip-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--grey-400); margin-bottom:2px; }
+.post-strip-value { font-size:14px; font-weight:700; color:var(--dark); }
+.post-strip-value.muted { color:var(--grey-500); font-weight:500; }
+
+/* POST FIELD */
+.post-field { margin-bottom:28px; }
+.post-field:last-child { margin-bottom:0; }
+.post-field-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--grey-400); margin-bottom:8px; }
+.post-field-value { font-size:14px; color:var(--dark); line-height:1.7; padding:16px 20px; background:var(--grey-50); border:1px solid var(--grey-200); border-radius:10px; white-space:pre-line; word-break:break-word; }
+.post-field-grid { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:14px; }
+
+/* POST LINK FIELD */
+.post-link-box { background:var(--grey-50); border:1px solid var(--grey-200); border-radius:10px; overflow:hidden; min-width:0; }
+
+/* Link display mode */
+.link-display { display:flex; align-items:center; }
+.link-display a { flex:1; padding:12px 16px; font-size:13px; color:var(--blue); text-decoration:none; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:0; }
+.link-display a:hover { text-decoration:underline; }
+.link-action { width:34px; display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--grey-400); border:none; background:transparent; transition:all 0.15s; flex-shrink:0; border-left:1px solid var(--grey-200); padding:10px 0; font-family:var(--font); }
+.link-action:hover { color:var(--dark); background:var(--grey-100); }
+.link-action.save-action { color:var(--green); }
+.link-action.save-action:hover { background:var(--green-light); }
+
+/* Link empty state */
+.link-empty { padding:12px 16px; font-size:13px; color:var(--grey-400); font-style:italic; cursor:pointer; display:flex; align-items:center; justify-content:space-between; }
+.link-empty:hover { background:var(--grey-100); }
+.link-empty svg { opacity:0.5; }
+
+/* Link edit mode */
+.link-edit { display:flex; align-items:center; }
+.link-edit input { flex:1; padding:12px 16px; font-size:13px; font-family:var(--font); border:none; background:#FFFEF5; color:var(--dark); outline:none; }
+.link-edit input::placeholder { color:var(--grey-400); font-style:italic; }
+
+
+/* POST NOTES */
+.post-notes-box { background:var(--grey-50); border:1px solid var(--grey-200); border-radius:10px; min-height:60px; overflow:hidden; }
+.post-notes-input { width:100%; min-height:60px; padding:16px 20px; font-size:14px; font-family:var(--font); border:none; background:transparent; color:var(--dark); outline:none; resize:vertical; line-height:1.6; }
+.post-notes-input::placeholder { color:var(--grey-400); font-style:italic; }
+
+/* PROOF READING */
+.proof-box { padding:18px 20px; background:var(--grey-50); border:1px solid var(--grey-200); border-radius:10px; }
+.proof-progress { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+.proof-count { font-size:12px; font-weight:600; color:var(--grey-500); }
+.proof-bar { width:100%; height:4px; background:var(--grey-200); border-radius:2px; margin-bottom:16px; }
+.proof-bar-fill { height:4px; border-radius:2px; background:var(--amber); width:0%; transition:width 0.3s; }
+.proof-item { display:flex; align-items:center; gap:10px; padding:8px 6px; border-radius:6px; cursor:pointer; transition:background 0.15s; }
+.proof-item:hover { background:var(--grey-100); }
+.proof-check { width:18px; height:18px; border-radius:4px; border:1.5px solid var(--grey-300); background:var(--white); display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all 0.15s; cursor:pointer; }
+.proof-item.checked .proof-check { background:var(--green); border-color:var(--green); }
+.proof-item.checked .proof-label { color:var(--green); text-decoration:line-through; }
+.proof-label { font-size:13px; color:var(--dark); }
+
+/* POST NOTE BANNER */
+.post-note-banner { padding:12px 18px; background:var(--brand-light); border:1px solid #F5C6D0; border-radius:10px; font-size:12px; line-height:1.6; color:#8B0D2E; display:flex; gap:10px; align-items:flex-start; }
+.post-note-banner strong { font-weight:700; }
+
+/* LANG TABS */
+.lang-tabs { display:flex; gap:0; border-bottom:1px solid var(--grey-200); background:var(--grey-50); }
+.lang-tab { flex:1; padding:10px 20px; font-size:12px; font-weight:600; color:var(--grey-500); cursor:pointer; border-bottom:2px solid transparent; transition:all 0.2s; background:transparent; border-top:none; border-left:none; border-right:none; font-family:var(--font); text-align:center; }
+.lang-tab.active { color:var(--blue); border-bottom-color:var(--blue); background:var(--white); }
+.lang-tab:hover { color:var(--dark); }
+.lang-content { display:none; }
+.lang-content.active { display:block; }
+
+.placeholder { padding:60px 40px; text-align:center; color:var(--grey-400); font-size:14px; border:2px dashed var(--grey-200); border-radius:var(--radius-lg); }
+
+/* RESPONSIVE */
+@media(max-width:768px) {
+  .header { padding:16px 20px; }
+  .header-inner { flex-direction:column; align-items:flex-start; gap:12px; }
+  .main { padding:20px 16px 60px; }
+  .campaign-info { padding:20px 16px; }
+  .campaign-row { flex-direction:column; }
+  .campaign-cell + .campaign-cell { border-left:none; border-top:1px solid var(--grey-100); }
+  .post-body { padding:20px 16px; }
+  .post-header { padding:16px 20px; }
+  .post-strip { grid-template-columns:1fr 1fr; }
+  .post-strip-cell:nth-child(2) { border-right:none; }
+  .post-strip-cell:nth-child(3), .post-strip-cell:nth-child(4) { border-top:1px solid var(--grey-200); padding-top:12px; margin-top:12px; }
+  .post-field-grid { grid-template-columns:1fr; }
+  .lang-tabs { flex-wrap:wrap; }
+  .lang-tab { flex:1 1 18%; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-inner">
+    <div class="header-left">
+      <h1>Refer-A-Friend — Social Media Posting Schedule</h1>
+      <p>Q2 2026 · SEA & ROW · Campaign Period: 01 April – 30 June 2026</p>
+    </div>
+    <div class="header-right">
+      <span class="header-badge badge-posts">● 2 Posts</span>
+      <span class="header-badge badge-lang">● EN</span>
+      <span class="header-badge badge-status">● Draft</span>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+  <!-- CAMPAIGN INFO -->
+  <div class="campaign-info">
+    <div class="campaign-info-title">Campaign Information</div>
+    <div>
+      <div class="campaign-row">
+        <div class="campaign-cell">
+          <span class="campaign-label">Campaign</span>
+          <span class="campaign-value">Q2 2026 Refer-A-Friend (SEA & ROW)</span>
+        </div>
+        <div class="campaign-cell">
+          <span class="campaign-label">Language</span>
+          <span class="campaign-value">English (Global)</span>
+        </div>
+      </div>
+      <div class="campaign-row">
+        <div class="campaign-cell">
+          <span class="campaign-label">Platforms</span>
+          <span class="campaign-value">Facebook, Instagram</span>
+        </div>
+        <div class="campaign-cell">
+          <span class="campaign-label">Poster Sizes</span>
+          <span class="campaign-value">1080×1350 (IG), 1080×1080 (FB)</span>
+        </div>
+      </div>
+      <div class="campaign-row">
+        <div class="campaign-cell">
+          <span class="campaign-label">Landing Page URL</span>
+          <span class="campaign-value"><a href="https://lnd.tmgm.com/en/refer-a-friend-sea" target="_blank">https://lnd.tmgm.com/en/refer-a-friend-sea</a></span>
+        </div>
+        <div class="campaign-cell">
+          <span class="campaign-label">Figma</span>
+          <span class="campaign-value"><a href="#">[Insert Figma link]</a></span>
+        </div>
+      </div>
+      <div class="campaign-row">
+        <div class="campaign-cell">
+          <span class="campaign-label">UTM Tracking</span>
+          <span class="campaign-value"><span class="pending">Pending from OP team</span></span>
+        </div>
+        <div class="campaign-cell">
+          <span class="campaign-label">Status</span>
+          <span class="campaign-value">Request 'sm' prefix for Social Media tracking</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- POST 1: INSTAGRAM -->
+  <div id="post-1" class="post-card">
+    <div class="post-header" onclick="togglePost(this)">
+      <div class="post-header-left">
+        <div class="post-num instagram">1</div>
+        <div class="post-meta">
+          <h2>Instagram — Refer-A-Friend</h2>
+          <div class="trigger">Post 1 · 1080 × 1350 · Wednesday, 1 April 2026</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <span class="expand-hint">Click to expand</span>
+        <div class="post-toggle"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="transition:transform 0.3s"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
+      </div>
+    </div>
+    <div class="post-collapsible">
+      <div class="lang-tabs">
+        <button class="lang-tab active" onclick="switchLang(this,'post1','en')">EN</button>
+        <button class="lang-tab" onclick="switchLang(this,'post1','id')">ID</button>
+        <button class="lang-tab" onclick="switchLang(this,'post1','vn')">VN</button>
+        <button class="lang-tab" onclick="switchLang(this,'post1','th')">TH</button>
+        <button class="lang-tab" onclick="switchLang(this,'post1','ko')">KO</button>
+      </div>
+
+      <!-- EN -->
+      <div id="post1-en" class="lang-content active" data-tab="EN - English (Global)" data-row="2">
+      <div class="post-body">
+        <div class="post-strip">
+          <div class="post-strip-cell"><div class="post-strip-label">Size</div><div class="post-strip-value">1080 × 1350</div></div>
+          <div class="post-strip-cell"><div class="post-strip-label">Post Date</div><div class="post-strip-value">Wednesday, 1 April 2026</div></div>
+          <div class="post-strip-cell"><div class="post-strip-label">Boost</div><div class="post-strip-value muted">TBC</div></div>
+          <div class="post-strip-cell"><div class="post-strip-label">Status</div><div class="post-strip-value"><span style="display:inline-block;padding:3px 12px;border-radius:20px;font-size:12px;font-weight:600;background:var(--amber-light);color:var(--amber);">Draft</span></div></div>
+        </div>
+        <div class="post-field"><div class="post-field-label">Caption / Description</div><div class="post-field-value">Earn $50 when you refer a friend to TMGM and your friend gets $50 too! 🎉
+
+It's simple: share your referral link, your friend signs up and trades, and you both get rewarded. No limits on how many friends you can refer.
+
+👉 Start referring now: [link]
+
+*T&Cs apply.
+
+#TMGM #ReferAFriend #TradeTheWorld #Earn50 #TradingRewards #Forex #CFDTrading</div></div>
+        <div class="post-field"><div class="post-field-grid">
+          <div><div class="post-field-label">Poster Image Link</div><div class="post-link-box"></div></div>
+          <div><div class="post-field-label">CTA / UTM Link</div><div class="post-link-box"></div></div>
+        </div></div>
+        <div class="post-field"><div class="post-field-label">💬 Team Notes</div><div class="post-notes-box"><textarea class="post-notes-input" placeholder="Add notes for the team…"></textarea></div></div>
+        <div class="post-field"><div class="post-field-label">✅ Proof Reading</div><div class="proof-box"><div class="proof-progress"><div class="proof-count">0/3 completed</div></div><div class="proof-bar"><div class="proof-bar-fill"></div></div>
+          <div class="proof-item" onclick="toggleProof(this)"><div class="proof-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg></div><div class="proof-label">Caption reviewed & approved by Social Media Team</div></div>
+          <div class="proof-item" onclick="toggleProof(this)"><div class="proof-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg></div><div class="proof-label">Links tested & working by Social Media Team</div></div>
+          <div class="proof-item" onclick="toggleProof(this)"><div class="proof-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg></div><div class="proof-label">Poster image approved by Social Media Team</div></div>
+        </div></div>
+        <div class="post-note-banner"><span style="font-size:14px;flex-shrink:0;">📝</span><span><strong>Note:</strong> The social media team is welcome to amend or rephrase any caption if they feel a different approach would be more suitable or effective for the audience.</span></div>
+      </div>
+      </div>
+
+      <!-- ID -->
+      <div id="post1-id" class="lang-content" data-tab="ID - Indonesian" data-row="2">
+      <div class="post-body">
+        <div class="post-strip">
+          <div class="post-strip-cell"><div class="post-strip-label">Size</div><div class="post-strip-value">1080 × 1350</div></div>
+          <div class="post-strip-cell"><div class="post-strip-label">Post Date</div><div class="post-strip-value">Wednesday, 1 April 2026</div></div>
+          <div class="post-strip-cell"><div class="post-strip-label">Boost</div><div class="post-strip-value muted">TBC</div></div>
+          <div class="post-strip-cell"><div class="post-strip-label">Status</div><div class="post-strip-value"><span style="display:inline-block;padding:3px 12px;border-radius:20px;font-size:12px;font-weight:600;background:var(--amber-light);color:var(--amber);">Draft</span></div></div>
+        </div>
+        <div class="post-field"><div class="post-field-label">Caption / Description</div><div class="post-field-value">Dapatkan $50 dengan mengajak teman ke TMGM — dan temanmu juga dapat $50! 🎉
+
+Caranya mudah: bagikan link referral kamu, temanmu mendaftar dan trading, dan kalian berdua mendapatkan reward. Tanpa batas jumlah teman yang bisa kamu ajak.
+
+👉 Ajak sekarang: [link]
+
+*Syarat dan ketentuan berlaku.
+
+#TMGM #AjakTeman #TradeTheWorld #Earn50 #TradingRewards #Forex #CFDTrading</div></div>
+        <div class="post-field"><div class="post-field-grid">
+          <div><div class="post-field-label">Poster Image Link</div><div class="post-link-box"></div></div>
+          <div><div class="post-field-label">CTA / UTM Link</div><div class="post-link-box"></div></div>
+        </div></div>
+        <div class="post-field"><div class="post-field-label">💬 Team Notes</div><div class="post-notes-box"><textarea class="post-notes-input" placeholder="Add notes for the team…"></textarea></div></div>
+        <div class="post-note-banner"><span style="font-size:14px;flex-shrink:0;">📝</span><span><strong>Note:</strong> The social media team is welcome to amend or rephrase any caption if they feel a different approach would be more suitable or effective for the audience.</span></div>
+      </div>
+      </div>
+
+      <!-- VN -->
+      <div id="post1-vn" class="lang-content" data-tab="VN - Vietnamese" data-row="2">
+      <div class="post-body">
+        <div class="post-strip">
+          <div class="post-strip-cell"><div class="post-strip-label">Size</div><div class="post-strip-value">1080 × 1350</div></div>
+          <div class="post-strip-cell"><div class="post-strip-label">Post Date</div><div class="post-strip-value">Wednesday, 1 April 2026</div></div>
+          <div class="post-strip-cell"><div class="post-strip-label">Boost</div><div class="post-strip-value muted">TBC</div></div>
+          <div class="post-strip-cell"><div class="post-strip-label">Status</div><div class="post-strip-value"><span style="display:inline-block;padding:3px 12px;border-radius:20px;font-size:12px;font-weight:600;background:var(--amber-light);color:var(--amber);">Draft</span></div></div>
+        </div>
+        <div class="post-field"><div class="post-field-label">Caption / Description</div><div class="post-field-value">Nhận $50 khi giới thiệu bạn bè đến TMGM — bạn của bạn cũng nhận $50! 🎉
+
+Rất đơn giản: chia sẻ link giới thiệu, bạn bè đăng ký và giao dịch, cả hai cùng nhận thưởng. Không giới hạn số lượng bạn bè bạn có thể giới thiệu.
+
+👉 Giới thiệu ngay: [link]
+
+*Điều khoản và điều kiện áp dụng.
+
+#TMGM #GioiThieuBanBe #TradeTheWorld #Earn50 #TradingRewards #Forex #CFDTrading</div></div>
+        <div class="post-field"><div class="post-field-grid">
+          <div><div class="post-field-label">Poster Image Link</div><div class="post-link-box"></div></div>
+          <div><div class="post-field-label">CTA / UTM Link</div><div class="post-link-box"></div></div>
+        </div></div>
+        <div class="post-field"><div class="post-field-label">💬 Team Notes</div><div class="post-notes-box"><textarea class="post-notes-input" placeholder="Add notes for the team…"></textarea></div></div>
+        <div class="post-note-banner"><span style="font-size:14px;flex-shrink:0;">📝</span><span><strong>Note:</strong> The social media team is welcome to amend or rephrase any caption if they feel a different approach would be more suitable or effective for the audience.</span></div>
+      </div>
+      </div>
+
+      <!-- TH -->
+      <div id="post1-th" class="lang-content" data-tab="TH - Thai" data-row="2">
+      <div class="post-body">
+        <div class="post-strip">
+          <div class="post-strip-cell"><div class="post-strip-label">Size</div><div class="post-strip-value">1080 × 1350</div></div>
+          <div class="post-strip-cell"><div class="post-strip-label">Post Date</div><div class="post-strip-value">Wednesday, 1 April 2026</div></div>
+          <div class="post-strip-cell"><div class="post-strip-label">Boost</div><div class="post-strip-value muted">TBC</div></div>
+          <div class="post-strip-cell"><div class="post-strip-label">Status</div><div class="post-strip-value"><span style="display:inline-block;padding:3px 12px;border-radius:20px;font-size:12px;font-weight:600;background:var(--amber-light);color:var(--amber);">Draft</span></div></div>
+        </div>
+        <div class="post-field"><div class="post-field-label">Caption / Description</div><div class="post-field-value">รับ $50 เมื่อแนะนำเพื่อนมาที่ TMGM — เพื่อนคุณก็ได้รับ $50 เช่นกัน! 🎉
+
+ง่ายมาก: แชร์ลิงก์แนะนำของคุณ เพื่อนสมัครและเทรด ทั้งคู่ก็ได้รับรางวัล ไม่จำกัดจำนวนเพื่อนที่คุณแนะนำ
+
+👉 เริ่มแนะนำเลย: [link]
+
+*เงื่อนไขเป็นไปตามที่บริษัทกำหนด
+
+#TMGM #แนะนำเพื่อน #TradeTheWorld #Earn50 #TradingRewards #Forex #CFDTrading</div></div>
+        <div class="post-field"><div class="post-field-grid">
+          <div><div class="post-field-label">Poster Image Link</div><div class="post-link-box"></div></div>
+          <div><div class="post-field-label">CTA / UTM Link</div><div class="post-link-box"></div></div>
+        </div></div>
+        <div class="post-field"><div class="post-field-label">💬 Team Notes</div><div class="post-notes-box"><textarea class="post-notes-input" placeholder="Add notes for the team…"></textarea></div></div>
+        <div class="post-note-banner"><span style="font-size:14px;flex-shrink:0;">📝</span><span><strong>Note:</strong> The social media team is welcome to amend or rephrase any caption if they feel a different approach would be more suitable or effective for the audience.</span></div>
+      </div>
+      </div>
+
+      <!-- KO -->
+      <div id="post1-ko" class="lang-content" data-tab="KO - Korean" data-row="2">
+      <div class="post-body">
+        <div class="post-strip">
+          <div class="post-strip-cell"><div class="post-strip-label">Size</div><div class="post-strip-value">1080 × 1350</div></div>
+          <div class="post-strip-cell"><div class="post-strip-label">Post Date</div><div class="post-strip-value">Wednesday, 1 April 2026</div></div>
+          <div class="post-strip-cell"><div class="post-strip-label">Boost</div><div class="post-strip-value muted">TBC</div></div>
+          <div class="post-strip-cell"><div class="post-strip-label">Status</div><div class="post-strip-value"><span style="display:inline-block;padding:3px 12px;border-radius:20px;font-size:12px;font-weight:600;background:var(--amber-light);color:var(--amber);">Draft</span></div></div>
+        </div>
+        <div class="post-field"><div class="post-field-label">Caption / Description</div><div class="post-field-value">친구를 TMGM에 초대하면 $50 지급 — 친구도 $50을 받아요! 🎉
+
+간단합니다: 추천 링크를 공유하고, 친구가 가입 후 거래하면 두 분 모두 보상을 받으실 수 있습니다. 추천 인원 제한 없음.
+
+👉 지금 추천하기: [link]
+
+*이용약관이 적용됩니다.
+
+#TMGM #친구추천 #TradeTheWorld #Earn50 #TradingRewards #Forex #CFDTrading</div></div>
+        <div class="post-field"><div class="post-field-grid">
+          <div><div class="post-field-label">Poster Image Link</div><div class="post-link-box"></div></div>
+          <div><div class="post-field-label">CTA / UTM Link</div><div class="post-link-box"></div></div>
+        </div></div>
+        <div class="post-field"><div class="post-field-label">💬 Team Notes</div><div class="post-notes-box"><textarea class="post-notes-input" placeholder="Add notes for the team…"></textarea></div></div>
+        <div class="post-note-banner"><span style="font-size:14px;flex-shrink:0;">📝</span><span><strong>Note:</strong> The social media team is welcome to amend or rephrase any caption if they feel a different approach would be more suitable or effective for the audience.</span></div>
+      </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- POST 2: FACEBOOK -->
+  <div id="post-2" class="post-card">
+    <div class="post-header" onclick="togglePost(this)">
+      <div class="post-header-left">
+        <div class="post-num facebook">2</div>
+        <div class="post-meta">
+          <h2>Facebook — Refer-A-Friend</h2>
+          <div class="trigger">Post 2 · 1080 × 1080 · Wednesday, 1 April 2026</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <span class="expand-hint">Click to expand</span>
+        <div class="post-toggle"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="transition:transform 0.3s"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
+      </div>
+    </div>
+    <div class="post-collapsible">
+      <div class="lang-tabs">
+        <button class="lang-tab active" onclick="switchLang(this,'post2','en')">EN</button>
+        <button class="lang-tab" onclick="switchLang(this,'post2','id')">ID</button>
+        <button class="lang-tab" onclick="switchLang(this,'post2','vn')">VN</button>
+        <button class="lang-tab" onclick="switchLang(this,'post2','th')">TH</button>
+        <button class="lang-tab" onclick="switchLang(this,'post2','ko')">KO</button>
+      </div>
+
+      <!-- EN -->
+      <div id="post2-en" class="lang-content active" data-tab="EN - English (Global)" data-row="3">
+      <div class="post-body">
+        <div class="post-strip">
+          <div class="post-strip-cell"><div class="post-strip-label">Size</div><div class="post-strip-value">1080 × 1080</div></div>
+          <div class="post-strip-cell"><div class="post-strip-label">Post Date</div><div class="post-strip-value">Wednesday, 1 April 2026</div></div>
+          <div class="post-strip-cell"><div class="post-strip-label">Boost</div><div class="post-strip-value muted">TBC</div></div>
+          <div class="post-strip-cell"><div class="post-strip-label">Status</div><div class="post-strip-value"><span style="display:inline-block;padding:3px 12px;border-radius:20px;font-size:12px;font-weight:600;background:var(--amber-light);color:var(--amber);">Draft</span></div></div>
+        </div>
+        <div class="post-field"><div class="post-field-label">Caption / Description</div><div class="post-field-value">Earn $50 when you refer a friend to TMGM and your friend gets $50 too! 🎉
+
+It's simple: share your referral link, your friend signs up and trades, and you both get rewarded. No limits on how many friends you can refer.
+
+👉 Start referring now: [link]
+
+*T&Cs apply.</div></div>
+        <div class="post-field"><div class="post-field-grid">
+          <div><div class="post-field-label">Poster Image Link</div><div class="post-link-box"></div></div>
+          <div><div class="post-field-label">CTA / UTM Link</div><div class="post-link-box"></div></div>
+        </div></div>
+        <div class="post-field"><div class="post-field-label">💬 Team Notes</div><div class="post-notes-box"><textarea class="post-notes-input" placeholder="Add notes for the team…"></textarea></div></div>
+        <div class="post-field"><div class="post-field-label">✅ Proof Reading</div><div class="proof-box"><div class="proof-progress"><div class="proof-count">0/3 completed</div></div><div class="proof-bar"><div class="proof-bar-fill"></div></div>
+          <div class="proof-item" onclick="toggleProof(this)"><div class="proof-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg></div><div class="proof-label">Caption reviewed & approved by Social Media Team</div></div>
+          <div class="proof-item" onclick="toggleProof(this)"><div class="proof-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg></div><div class="proof-label">Links tested & working by Social Media Team</div></div>
+          <div class="proof-item" onclick="toggleProof(this)"><div class="proof-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg></div><div class="proof-label">Poster image approved by Social Media Team</div></div>
+        </div></div>
+        <div class="post-note-banner"><span style="font-size:14px;flex-shrink:0;">📝</span><span><strong>Note:</strong> The social media team is welcome to amend or rephrase any caption if they feel a different approach would be more suitable or effective for the audience.</span></div>
+      </div>
+      </div>
+
+      <!-- ID -->
+      <div id="post2-id" class="lang-content" data-tab="ID - Indonesian" data-row="3">
+      <div class="post-body">
+        <div class="post-strip">
+          <div class="post-strip-cell"><div class="post-strip-label">Size</div><div class="post-strip-value">1080 × 1080</div></div>
+          <div class="post-strip-cell"><div class="post-strip-label">Post Date</div><div class="post-strip-value">Wednesday, 1 April 2026</div></div>
+          <div class="post-strip-cell"><div class="post-strip-label">Boost</div><div class="post-strip-value muted">TBC</div></div>
+          <div class="post-strip-cell"><div class="post-strip-label">Status</div><div class="post-strip-value"><span style="display:inline-block;padding:3px 12px;border-radius:20px;font-size:12px;font-weight:600;background:var(--amber-light);color:var(--amber);">Draft</span></div></div>
+        </div>
+        <div class="post-field"><div class="post-field-label">Caption / Description</div><div class="post-field-value">Dapatkan $50 dengan mengajak teman ke TMGM — dan temanmu juga dapat $50! 🎉
+
+Caranya mudah: bagikan link referral kamu, temanmu mendaftar dan trading, dan kalian berdua mendapatkan reward. Tanpa batas jumlah teman yang bisa kamu ajak.
+
+👉 Ajak sekarang: [link]
+
+*Syarat dan ketentuan berlaku.</div></div>
+        <div class="post-field"><div class="post-field-grid">
+          <div><div class="post-field-label">Poster Image Link</div><div class="post-link-box"></div></div>
+          <div><div class="post-field-label">CTA / UTM Link</div><div class="post-link-box"></div></div>
+        </div></div>
+        <div class="post-field"><div class="post-field-label">💬 Team Notes</div><div class="post-notes-box"><textarea class="post-notes-input" placeholder="Add notes for the team…"></textarea></div></div>
+        <div class="post-note-banner"><span style="font-size:14px;flex-shrink:0;">📝</span><span><strong>Note:</strong> The social media team is welcome to amend or rephrase any caption if they feel a different approach would be more suitable or effective for the audience.</span></div>
+      </div>
+      </div>
+
+      <!-- VN -->
+      <div id="post2-vn" class="lang-content" data-tab="VN - Vietnamese" data-row="3">
+      <div class="post-body">
+        <div class="post-strip">
+          <div class="post-strip-cell"><div class="post-strip-label">Size</div><div class="post-strip-value">1080 × 1080</div></div>
+          <div class="post-strip-cell"><div class="post-strip-label">Post Date</div><div class="post-strip-value">Wednesday, 1 April 2026</div></div>
+          <div class="post-strip-cell"><div class="post-strip-label">Boost</div><div class="post-strip-value muted">TBC</div></div>
+          <div class="post-strip-cell"><div class="post-strip-label">Status</div><div class="post-strip-value"><span style="display:inline-block;padding:3px 12px;border-radius:20px;font-size:12px;font-weight:600;background:var(--amber-light);color:var(--amber);">Draft</span></div></div>
+        </div>
+        <div class="post-field"><div class="post-field-label">Caption / Description</div><div class="post-field-value">Nhận $50 khi giới thiệu bạn bè đến TMGM — bạn của bạn cũng nhận $50! 🎉
+
+Rất đơn giản: chia sẻ link giới thiệu, bạn bè đăng ký và giao dịch, cả hai cùng nhận thưởng. Không giới hạn số lượng bạn bè bạn có thể giới thiệu.
+
+👉 Giới thiệu ngay: [link]
+
+*Điều khoản và điều kiện áp dụng.</div></div>
+        <div class="post-field"><div class="post-field-grid">
+          <div><div class="post-field-label">Poster Image Link</div><div class="post-link-box"></div></div>
+          <div><div class="post-field-label">CTA / UTM Link</div><div class="post-link-box"></div></div>
+        </div></div>
+        <div class="post-field"><div class="post-field-label">💬 Team Notes</div><div class="post-notes-box"><textarea class="post-notes-input" placeholder="Add notes for the team…"></textarea></div></div>
+        <div class="post-note-banner"><span style="font-size:14px;flex-shrink:0;">📝</span><span><strong>Note:</strong> The social media team is welcome to amend or rephrase any caption if they feel a different approach would be more suitable or effective for the audience.</span></div>
+      </div>
+      </div>
+
+      <!-- TH -->
+      <div id="post2-th" class="lang-content" data-tab="TH - Thai" data-row="3">
+      <div class="post-body">
+        <div class="post-strip">
+          <div class="post-strip-cell"><div class="post-strip-label">Size</div><div class="post-strip-value">1080 × 1080</div></div>
+          <div class="post-strip-cell"><div class="post-strip-label">Post Date</div><div class="post-strip-value">Wednesday, 1 April 2026</div></div>
+          <div class="post-strip-cell"><div class="post-strip-label">Boost</div><div class="post-strip-value muted">TBC</div></div>
+          <div class="post-strip-cell"><div class="post-strip-label">Status</div><div class="post-strip-value"><span style="display:inline-block;padding:3px 12px;border-radius:20px;font-size:12px;font-weight:600;background:var(--amber-light);color:var(--amber);">Draft</span></div></div>
+        </div>
+        <div class="post-field"><div class="post-field-label">Caption / Description</div><div class="post-field-value">รับ $50 เมื่อแนะนำเพื่อนมาที่ TMGM — เพื่อนคุณก็ได้รับ $50 เช่นกัน! 🎉
+
+ง่ายมาก: แชร์ลิงก์แนะนำของคุณ เพื่อนสมัครและเทรด ทั้งคู่ก็ได้รับรางวัล ไม่จำกัดจำนวนเพื่อนที่คุณแนะนำ
+
+👉 เริ่มแนะนำเลย: [link]
+
+*เงื่อนไขเป็นไปตามที่บริษัทกำหนด</div></div>
+        <div class="post-field"><div class="post-field-grid">
+          <div><div class="post-field-label">Poster Image Link</div><div class="post-link-box"></div></div>
+          <div><div class="post-field-label">CTA / UTM Link</div><div class="post-link-box"></div></div>
+        </div></div>
+        <div class="post-field"><div class="post-field-label">💬 Team Notes</div><div class="post-notes-box"><textarea class="post-notes-input" placeholder="Add notes for the team…"></textarea></div></div>
+        <div class="post-note-banner"><span style="font-size:14px;flex-shrink:0;">📝</span><span><strong>Note:</strong> The social media team is welcome to amend or rephrase any caption if they feel a different approach would be more suitable or effective for the audience.</span></div>
+      </div>
+      </div>
+
+      <!-- KO -->
+      <div id="post2-ko" class="lang-content" data-tab="KO - Korean" data-row="3">
+      <div class="post-body">
+        <div class="post-strip">
+          <div class="post-strip-cell"><div class="post-strip-label">Size</div><div class="post-strip-value">1080 × 1080</div></div>
+          <div class="post-strip-cell"><div class="post-strip-label">Post Date</div><div class="post-strip-value">Wednesday, 1 April 2026</div></div>
+          <div class="post-strip-cell"><div class="post-strip-label">Boost</div><div class="post-strip-value muted">TBC</div></div>
+          <div class="post-strip-cell"><div class="post-strip-label">Status</div><div class="post-strip-value"><span style="display:inline-block;padding:3px 12px;border-radius:20px;font-size:12px;font-weight:600;background:var(--amber-light);color:var(--amber);">Draft</span></div></div>
+        </div>
+        <div class="post-field"><div class="post-field-label">Caption / Description</div><div class="post-field-value">친구를 TMGM에 초대하면 $50 지급 — 친구도 $50을 받아요! 🎉
+
+간단합니다: 추천 링크를 공유하고, 친구가 가입 후 거래하면 두 분 모두 보상을 받으실 수 있습니다. 추천 인원 제한 없음.
+
+👉 지금 추천하기: [link]
+
+*이용약관이 적용됩니다.</div></div>
+        <div class="post-field"><div class="post-field-grid">
+          <div><div class="post-field-label">Poster Image Link</div><div class="post-link-box"></div></div>
+          <div><div class="post-field-label">CTA / UTM Link</div><div class="post-link-box"></div></div>
+        </div></div>
+        <div class="post-field"><div class="post-field-label">💬 Team Notes</div><div class="post-notes-box"><textarea class="post-notes-input" placeholder="Add notes for the team…"></textarea></div></div>
+        <div class="post-note-banner"><span style="font-size:14px;flex-shrink:0;">📝</span><span><strong>Note:</strong> The social media team is welcome to amend or rephrase any caption if they feel a different approach would be more suitable or effective for the audience.</span></div>
+      </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════════════════════════════
+var API_URL = "https://script.google.com/macros/s/AKfycbzlC6F3xy_mKcYj-Qg26rMlNg9n56EJq4UhZHO15Y1uV5FQFBNVPzZjgUGuJSX9A1UjwQ/exec";
+
+var TAB_MAP = {
+  en: "EN - English (Global)",
+  id: "ID - Indonesian",
+  vn: "VN - Vietnamese",
+  th: "TH - Thai",
+  ko: "KO - Korean"
+};
+
+var LANGS = ["en", "id", "vn", "th", "ko"];
+var PROOF_KEYS = ["caption", "links", "image"];
+
+// Store row indices from sheet
+var rowMap = {}; // e.g. { "EN - English (Global)": { 1: 2, 2: 3 } }
+
+// ═══════════════════════════════════════════════════════════
+// API HELPERS
+// ═══════════════════════════════════════════════════════════
+function apiGet(action, params) {
+  var url = new URL(API_URL);
+  url.searchParams.set("action", action);
+  if (params) Object.entries(params).forEach(function(kv) { url.searchParams.set(kv[0], kv[1]); });
+  return fetch(url.toString()).then(function(r) { return r.json(); });
+}
+
+function apiPost(body) {
+  return fetch(API_URL, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain" },
+    body: JSON.stringify(body)
+  }).then(function(r) { return r.json(); });
+}
+
+// ═══════════════════════════════════════════════════════════
+// SAVE HELPER — debounced auto-save
+// ═══════════════════════════════════════════════════════════
+var saveTimers = {};
+
+function autoSave(tab, rowIndex, column, value) {
+  var key = tab + "-" + rowIndex + "-" + column;
+  clearTimeout(saveTimers[key]);
+  showSaving();
+  saveTimers[key] = setTimeout(function() {
+    apiPost({ action: "updateCell", tab: tab, row: rowIndex, column: column, value: value })
+      .then(function(res) {
+        if (res.success) showSaved();
+        else showSaveError();
+      })
+      .catch(function() { showSaveError(); });
+  }, 800);
+}
+
+// ═══════════════════════════════════════════════════════════
+// STATUS INDICATOR
+// ═══════════════════════════════════════════════════════════
+function getStatusEl() {
+  var el = document.getElementById("save-status");
+  if (!el) {
+    el = document.createElement("div");
+    el.id = "save-status";
+    el.style.cssText = "position:fixed;bottom:24px;right:24px;padding:8px 16px;border-radius:8px;font-size:12px;font-weight:600;font-family:var(--font);z-index:200;transition:opacity 0.3s;opacity:0;pointer-events:none;";
+    document.body.appendChild(el);
+  }
+  return el;
+}
+
+function showSaving() {
+  var el = getStatusEl();
+  el.textContent = "Saving…";
+  el.style.background = "var(--amber-light)";
+  el.style.color = "var(--amber)";
+  el.style.border = "1px solid var(--amber)";
+  el.style.opacity = "1";
+}
+
+function showSaved() {
+  var el = getStatusEl();
+  el.textContent = "✓ Saved";
+  el.style.background = "var(--green-light)";
+  el.style.color = "var(--green)";
+  el.style.border = "1px solid var(--green)";
+  el.style.opacity = "1";
+  setTimeout(function() { el.style.opacity = "0"; }, 2000);
+}
+
+function showSaveError() {
+  var el = getStatusEl();
+  el.textContent = "✗ Save failed";
+  el.style.background = "var(--red-light)";
+  el.style.color = "var(--red)";
+  el.style.border = "1px solid var(--red)";
+  el.style.opacity = "1";
+  setTimeout(function() { el.style.opacity = "0"; }, 3000);
+}
+
+// ═══════════════════════════════════════════════════════════
+// LINK BOX — Display / Edit / Empty rendering
+// ═══════════════════════════════════════════════════════════
+var PENCIL_SVG = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>';
+var OPEN_SVG = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>';
+var CHECK_SVG = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+var CANCEL_SVG = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+
+function renderLinkDisplay(box, value, column, tab, rowIndex) {
+  box.innerHTML = '<div class="link-display">' +
+    '<a href="' + value + '" target="_blank" rel="noreferrer">' + value + '</a>' +
+    '<button class="link-action" title="Open in new tab" onclick="window.open(\'' + value.replace(/'/g, "\\'") + '\',\'_blank\')">' + OPEN_SVG + '</button>' +
+    '<button class="link-action" title="Edit">' + PENCIL_SVG + '</button>' +
+    '</div>';
+  // Attach edit handler to pencil
+  var pencilBtn = box.querySelectorAll(".link-action")[1];
+  pencilBtn.onclick = function(e) { e.stopPropagation(); renderLinkEdit(box, value, column, tab, rowIndex); };
+}
+
+function renderLinkEmpty(box, placeholder, column, tab, rowIndex) {
+  box.innerHTML = '<div class="link-empty" title="Click to add">' +
+    '<span>' + placeholder + '</span>' + PENCIL_SVG +
+    '</div>';
+  box.querySelector(".link-empty").onclick = function() { renderLinkEdit(box, "", column, tab, rowIndex); };
+}
+
+// ═══════════════════════════════════════════════════════════
+// CAPTION [link] AUTO-POPULATE
+// ═══════════════════════════════════════════════════════════
+function updateCaptionLink(container, ctaUrl) {
+  if (!container) return;
+  var caption = container.querySelector(".post-field-value");
+  if (!caption) return;
+
+  // Store original text on first run
+  if (!caption.getAttribute("data-original")) {
+    caption.setAttribute("data-original", caption.textContent);
+  }
+
+  var original = caption.getAttribute("data-original");
+  if (ctaUrl) {
+    // Replace [link] with clickable <a> tag
+    var escaped = original.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    var html = escaped.replace(/\n/g, "<br>").replace(
+      /\[link\]/g,
+      '<a href="' + ctaUrl + '" target="_blank" rel="noreferrer" style="color:var(--blue);text-decoration:none;">' + ctaUrl + '</a>'
+    );
+    caption.innerHTML = html;
+  } else {
+    // Reset to original text
+    caption.textContent = original;
+  }
+}
+
+function getCaptionContainer(box) {
+  return box.closest(".lang-content");
+}
+
+function renderLinkEdit(box, currentValue, column, tab, rowIndex) {
+  box.innerHTML = '<div class="link-edit">' +
+    '<input type="text" value="' + (currentValue || "").replace(/"/g, '&quot;') + '" placeholder="Paste URL…" autofocus>' +
+    '<button class="link-action save-action" title="Save">' + CHECK_SVG + '</button>' +
+    '<button class="link-action" title="Cancel">' + CANCEL_SVG + '</button>' +
+    '</div>';
+  var input = box.querySelector("input");
+  var saveBtn = box.querySelector(".save-action");
+  var cancelBtn = box.querySelectorAll(".link-action")[1];
+
+  function save() {
+    var val = input.value.trim();
+    if (val) {
+      renderLinkDisplay(box, val, column, tab, rowIndex);
+      autoSave(tab, rowIndex, column, val);
+    } else {
+      var ph = column === "posterImageLink" ? "Paste image URL…" : "Paste tracking URL…";
+      renderLinkEmpty(box, ph, column, tab, rowIndex);
+      autoSave(tab, rowIndex, column, "");
+    }
+    // Update caption [link] if this is a CTA field
+    if (column === "ctaUtmLink") {
+      updateCaptionLink(getCaptionContainer(box), val);
+    }
+  }
+
+  saveBtn.onclick = function(e) { e.stopPropagation(); save(); };
+  cancelBtn.onclick = function(e) {
+    e.stopPropagation();
+    if (currentValue) renderLinkDisplay(box, currentValue, column, tab, rowIndex);
+    else {
+      var ph = column === "posterImageLink" ? "Paste image URL…" : "Paste tracking URL…";
+      renderLinkEmpty(box, ph, column, tab, rowIndex);
+    }
+  };
+  input.addEventListener("keydown", function(e) {
+    if (e.key === "Enter") save();
+    if (e.key === "Escape") cancelBtn.click();
+  });
+  input.focus();
+}
+
+// ═══════════════════════════════════════════════════════════
+// FIND FIELDS IN A LANG CONTAINER
+// ═══════════════════════════════════════════════════════════
+function getFields(container) {
+  var linkBoxes = container.querySelectorAll(".post-link-box");
+  var noteInput = container.querySelector(".post-notes-input");
+  var proofItems = container.querySelectorAll(".proof-item");
+  return {
+    posterBox: linkBoxes[0] || null,
+    ctaBox: linkBoxes[1] || null,
+    noteInput: noteInput,
+    proofItems: proofItems
+  };
+}
+
+// ═══════════════════════════════════════════════════════════
+// POPULATE FROM SHEET DATA
+// ═══════════════════════════════════════════════════════════
+function populateContainer(containerId, post) {
+  var container = document.getElementById(containerId);
+  if (!container || !post) return;
+
+  var fields = getFields(container);
+
+  // Parse tab and row from containerId for save handlers
+  var parts = containerId.replace("post", "").split("-");
+  var postNum = parseInt(parts[0]);
+  var lang = parts[1];
+  var tab = TAB_MAP[lang];
+  var ri = post._rowIndex;
+
+  // Poster image link
+  if (fields.posterBox) {
+    if (post.posterImageLink) {
+      renderLinkDisplay(fields.posterBox, post.posterImageLink, "posterImageLink", tab, ri);
+    } else {
+      renderLinkEmpty(fields.posterBox, "Paste image URL…", "posterImageLink", tab, ri);
+    }
+  }
+
+  // CTA / UTM link
+  if (fields.ctaBox) {
+    if (post.ctaUtmLink) {
+      renderLinkDisplay(fields.ctaBox, post.ctaUtmLink, "ctaUtmLink", tab, ri);
+    } else {
+      renderLinkEmpty(fields.ctaBox, "Paste tracking URL…", "ctaUtmLink", tab, ri);
+    }
+  }
+
+  // Update caption [link] with CTA URL
+  updateCaptionLink(container, post.ctaUtmLink || "");
+
+  // Team notes
+  if (fields.noteInput && post.notes) {
+    fields.noteInput.value = post.notes;
+  }
+
+  // Proofread checkboxes
+  if (post.proofread && fields.proofItems.length > 0) {
+    var checked = post.proofread.split(",").filter(Boolean);
+    fields.proofItems.forEach(function(item, idx) {
+      if (checked.indexOf(PROOF_KEYS[idx]) !== -1) {
+        item.classList.add("checked");
+      }
+    });
+    updateProofUI(container);
+  }
+
+  // Update boost in meta strip
+  if (post.boost) {
+    var boostVal = container.querySelector(".post-strip-value.muted");
+    if (boostVal) {
+      boostVal.textContent = post.boost;
+      if (post.boost !== "TBC") boostVal.classList.remove("muted");
+    }
+  }
+
+  // Update status in meta strip
+  if (post.status) {
+    var statusBadge = container.querySelector(".post-strip-value span");
+    if (statusBadge) {
+      statusBadge.textContent = post.status;
+      var colors = {
+        Draft: { bg: "var(--amber-light)", color: "var(--amber)" },
+        Pending: { bg: "var(--blue-light)", color: "var(--blue)" },
+        Ready: { bg: "var(--green-light)", color: "var(--green)" },
+        Posted: { bg: "var(--purple-light)", color: "var(--purple)" }
+      };
+      var c = colors[post.status] || colors.Draft;
+      statusBadge.style.background = c.bg;
+      statusBadge.style.color = c.color;
+    }
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// ATTACH SAVE HANDLERS TO ALL INPUTS IN A CONTAINER
+// ═══════════════════════════════════════════════════════════
+function attachSaveHandlers(containerId, tab, rowIndex) {
+  var container = document.getElementById(containerId);
+  if (!container) return;
+
+  var fields = getFields(container);
+
+  // Team notes (links are handled by renderLink functions)
+  if (fields.noteInput) {
+    fields.noteInput.addEventListener("input", function() {
+      autoSave(tab, rowIndex, "notes", this.value);
+    });
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// PROOF READING — updated to save to sheet
+// ═══════════════════════════════════════════════════════════
+function updateProofUI(container) {
+  var box = container.querySelector(".proof-box");
+  if (!box) return;
+  var total = box.querySelectorAll(".proof-item").length;
+  var checkedCount = box.querySelectorAll(".proof-item.checked").length;
+  box.querySelector(".proof-count").textContent = checkedCount + "/" + total + " completed";
+  var fill = box.querySelector(".proof-bar-fill");
+  fill.style.width = (checkedCount / total * 100) + "%";
+  fill.style.background = checkedCount === total ? "var(--green)" : "var(--amber)";
+  if (checkedCount === total) {
+    var progress = box.querySelector(".proof-progress");
+    if (!progress.querySelector(".proof-done")) {
+      var badge = document.createElement("div");
+      badge.className = "proof-done";
+      badge.style.cssText = "font-size:11px;font-weight:600;color:var(--green);background:var(--green-light);padding:2px 8px;border-radius:10px;";
+      badge.textContent = "All done ✓";
+      progress.appendChild(badge);
+    }
+  } else {
+    var done = box.querySelector(".proof-done");
+    if (done) done.remove();
+  }
+}
+
+function getProofValue(container) {
+  var items = container.querySelectorAll(".proof-item");
+  var checked = [];
+  items.forEach(function(item, idx) {
+    if (item.classList.contains("checked")) checked.push(PROOF_KEYS[idx]);
+  });
+  return checked.join(",");
+}
+
+function toggleProof(item) {
+  item.classList.toggle("checked");
+  var container = item.closest(".lang-content");
+  updateProofUI(container);
+
+  // Save to sheet
+  var containerId = container.id;
+  var parts = containerId.replace("post", "").split("-");
+  var postNum = parseInt(parts[0]);
+  var lang = parts[1];
+  var tab = TAB_MAP[lang];
+  var ri = rowMap[tab] && rowMap[tab][postNum];
+  if (ri) {
+    autoSave(tab, ri, "proofread", getProofValue(container));
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// TOGGLE & LANG SWITCH
+// ═══════════════════════════════════════════════════════════
+function togglePost(header) {
+  var card = header.closest(".post-card");
+  var wasExpanded = card.classList.contains("expanded");
+  document.querySelectorAll(".post-card.expanded").forEach(function(c) { c.classList.remove("expanded"); });
+  if (!wasExpanded) card.classList.add("expanded");
+}
+
+function switchLang(btn, postId, lang) {
+  var card = btn.closest(".post-card");
+  card.querySelectorAll(".lang-tab").forEach(function(t) { t.classList.remove("active"); });
+  card.querySelectorAll(".lang-content").forEach(function(c) { c.classList.remove("active"); });
+  btn.classList.add("active");
+  document.getElementById(postId + "-" + lang).classList.add("active");
+}
+
+// ═══════════════════════════════════════════════════════════
+// INIT — Load everything on page load
+// ═══════════════════════════════════════════════════════════
+(function init() {
+  apiGet("getAllData").then(function(result) {
+    if (!result.success) { console.error("API error:", result.error); return; }
+
+    var allPosts = result.data.posts;
+
+    LANGS.forEach(function(lang) {
+      var tab = TAB_MAP[lang];
+      var posts = allPosts[tab] || [];
+
+      // Build row map
+      if (!rowMap[tab]) rowMap[tab] = {};
+
+      posts.forEach(function(post) {
+        var postNum = post.id;
+        rowMap[tab][postNum] = post._rowIndex;
+
+        var containerId = "post" + postNum + "-" + lang;
+
+        // Populate fields from sheet data
+        populateContainer(containerId, post);
+
+        // Attach auto-save handlers
+        attachSaveHandlers(containerId, tab, post._rowIndex);
+      });
+    });
+
+    console.log("✅ Data loaded from sheet. Row map:", rowMap);
+  }).catch(function(e) {
+    console.error("Failed to load data:", e);
+  });
+})();
+</script>
+
+</body>
+</html>
